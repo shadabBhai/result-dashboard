@@ -1,7 +1,15 @@
 import React, { useState } from "react";
+import { dummyData, Student } from "../../constant/StudentData";
+import StudentDisplayDetails from "../DisplayStudentDetails/DisplayStudentDetails";
 
-const SearchStudent: React.FC = () => {
+interface StudentDetailsprops {
+  student: Student;
+}
+
+const SearchStudent: React.FC<StudentDetailsprops> = () => {
   const [rollNumber, setRollNumber] = useState<string>("");
+  const [studentDetails, setStudentDetails] = useState<Student | null>(null);
+  const students = dummyData;
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
@@ -9,11 +17,20 @@ const SearchStudent: React.FC = () => {
       setRollNumber(value);
     }
   };
+
   const handleClick = () => {
-    console.log(rollNumber);
+    const student = students.find(
+      (student) => student.rollNumber === +rollNumber
+    );
+    if (student) {
+      setStudentDetails(student);
+      // console.table(student);
+    } else {
+      setStudentDetails(null); // If student not found, set it to null
+    }
   };
 
-  return (
+  return studentDetails === null ? (
     <div className="flex justify-center">
       <div className="w-1/2 p-4 bg-white shadow-md rounded-lg">
         <input
@@ -33,6 +50,8 @@ const SearchStudent: React.FC = () => {
         </button>
       </div>
     </div>
+  ) : (
+    <StudentDisplayDetails student={studentDetails} />
   );
 };
 

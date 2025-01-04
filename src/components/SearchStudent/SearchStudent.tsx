@@ -26,7 +26,8 @@ const SearchStudent: React.FC<StudentDetailsprops> = () => {
       setStudentDetails(student);
       // console.table(student);
     } else {
-      setStudentDetails(null); // If student not found, set it to null
+      setStudentDetails(null);
+      alert("Student not found"); // If student not found, set it to null
     }
   };
 

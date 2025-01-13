@@ -42,7 +42,10 @@ const ResultForm: React.FC = () => {
   // Update percentage dynamically
   useEffect(() => {
     if (totalMarks > 0) {
-      const percentage = (securedMarks / totalMarks) * 100;
+      const percentage = Number.isNaN(securedMarks / totalMarks)
+        ? 0
+        : (securedMarks / totalMarks) * 100;
+
       setValue("percentage", parseFloat(percentage.toFixed(2)));
     } else {
       setValue("percentage", 0);
@@ -52,7 +55,10 @@ const ResultForm: React.FC = () => {
   //Update total numbers of subjects dynamically
   useEffect(() => {
     if (practiclaSubjects > 0 || theorySubjects > 0) {
-      setValue("totalSubjects", theorySubjects + practiclaSubjects);
+      const totalSubjects =
+        (Number.isNaN(theorySubjects) ? 0 : theorySubjects) +
+        (Number.isNaN(practiclaSubjects) ? 0 : practiclaSubjects);
+      setValue("totalSubjects", totalSubjects);
     } else {
       setValue("totalSubjects", 0);
     }
@@ -62,9 +68,14 @@ const ResultForm: React.FC = () => {
     (index: number) => {
       const internalMarks = watch(`subjects.${index}.internalMarks`);
       const externalMarks = watch(`subjects.${index}.externalMarks`);
-      const total = (internalMarks || 0) + (externalMarks || 0);
+      const total =
+        (Number.isNaN(internalMarks) ? 0 : internalMarks || 0) +
+        (Number.isNaN(externalMarks) ? 0 : externalMarks || 0);
 
-      setValue(`subjects.${index}.totalMarkPerSubject`, total); // Dynamically update the value in the form state
+      setValue(
+        `subjects.${index}.totalMarkPerSubject`,
+        Number.isNaN(total) ? 0 : Math.floor(total)
+      ); // Dynamically update the value in the form state
       return total;
     },
     [watch, setValue]
